@@ -1,7 +1,9 @@
 SELECT w.warheouse_number
 FROM public."Warhouse" w
-WHERE w.warheouse_number NOT IN (
-    SELECT p.warhouse_number
+WHERE NOT EXISTS (
+    SELECT 1
     FROM public.placement p
-    WHERE EXTRACT(MONTH FROM p.shipment_date) = 9
-);
+    WHERE p.warhouse_number = w.warheouse_number
+      AND EXTRACT(MONTH FROM p.shipment_date) = 9
+)
+ORDER BY w.warheouse_number;
